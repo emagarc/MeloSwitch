@@ -2,7 +2,8 @@
 
 import usePlayer from "@/hooks/usePlayer";
 import { Song } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useSound from "use-sound";
 
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
@@ -32,8 +33,71 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
 
     const onPlayNext = () => {
-        
-    }
+        if (player.ids.length === 0) {
+            return;
+        }
+
+        const currentIndex = player.ids.findIndex((id) => id === player.activeId);
+        const nextSong = player.ids[currentIndex + 1];
+
+        if (!nextSong) {
+            return player.setId(player.ids[0]);
+        }
+
+        player.setId(nextSong);
+    };
+
+    const onPlayPrevious = () => {
+        if (player.ids.length === 0) {
+            return;
+        }
+
+        const currentIndex = player.ids.findIndex((id) => id === player.activeId);
+        const previousSong = player.ids[currentIndex - 1];
+
+        if (!previousSong) {
+            return player.setId(player.ids[player.ids.length -1]);
+        }
+
+        player.setId(previousSong);
+    };
+
+    const [play, {pause, sound}] = useSound(
+        songUrl,
+        {
+            volume: volume,
+            onplay: () => setIsPlaying(true),
+            onend: () => {
+                setIsPlaying(false);
+                onPlayNext();
+            },
+            onpause: () => setIsPlaying(false),
+            format: ["mp3"]
+        }
+    );
+
+    useEffect(() => {
+        sound?.play();
+        return () => {
+            sound?.unload();
+        }
+    }, [sound]);
+
+    const handlePlay = () => {
+        if (!isPlaying) {
+            play();
+        } else {
+            pause();
+        }
+    };
+
+    const toggleMute = () => {
+        if (volume === 0) {
+            setVolume(1);
+        } else {
+            setVolume(0);
+        }
+    };
 
 
   return (
@@ -51,7 +115,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
             "
         >
             <div
-                onClick={() => {}}
+                onClick={handlePlay}
                 className="
                     h-10 w-10 flex items-center
                     justify-center rounded-full
@@ -68,7 +132,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
             "
         >
             <AiFillStepBackward 
-                onClick={() => {}}
+                onClick={onPlayPrevious}
                 size={30}
                 className="
                     text-neutral-400 cursor-pointer
@@ -76,7 +140,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
                 "
             />
             <div
-                onClick={() => {}}
+                onClick={handlePlay}
                 className="
                     flex items-center justify-center
                     h-10 w-10 rounded-full bg-white
@@ -86,7 +150,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
                 <Icon size={30} className="text-black"/>
             </div>
             <AiFillStepForward 
-                onClick={() => {}}
+                onClick={onPlayNext}
                 size={30}
                 className="
                     text-neutral-400 cursor-pointer
@@ -97,11 +161,14 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         <div className="hidden md:flex w-full justify-end pr-2">
             <div className="flex items-center gap-x-2 w-[120px]">
                 <VolumeIcon 
-                    onClick={() => {}}
+                    onClick={toggleMute}
                     className="cursor-pointer"
                     size={34}
                 />
-                <Slider />
+                <Slider 
+                    value={volume}
+                    onChange={(value) => setVolume(value)}
+                />
             </div>
         </div>
     </div>

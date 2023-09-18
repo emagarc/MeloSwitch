@@ -49,24 +49,13 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <div
         className={twMerge(`
-            h-fit bg-gradient-to-b
-            from-blue-400 p-6
+            h-fit bg-gradient-to-b from-blue-500 p-6
         `,
             className
         )}
     >
-        <div
-            className="
-                w-full mb-4 flex items-center
-                justify-between 
-            "
-        >
-            <div
-                className="
-                    hidden md:flex
-                    gap-x-2 items-center
-                "
-            >
+        <div className="w-full mb-4 flex items-center justify-between">
+            <div className="hidden md:flex gap-x-2 items-center">
                 <button
                     onClick={() => router.back()}
                     className="
@@ -94,19 +83,13 @@ const Header: React.FC<HeaderProps> = ({
                     />
                 </button>
             </div>
-            <div
-                className="
-                    flex md:hidden 
-                    gap-x-2 items-center
-                "
-            >
-                <button
+            <div className="flex md:hidden gap-x-2 items-center">
+                <button 
                     className="
-                        rounded-full p-2 bg-white
-                        flex items-center justify-center 
-                        hover:opacity-75 transition
-                    "
-                >
+                        rounded-full p-2 bg-white flex items-center 
+                        justify-center hover:opacity-75 transition
+                        "
+                    >
                     <HiHome 
                         size={20}
                         className="text-black"
@@ -125,12 +108,7 @@ const Header: React.FC<HeaderProps> = ({
                     />
                 </button>
             </div>
-            <div
-                className="
-                    flex justify-between
-                    items-center gap-x-4
-                "
-            >
+            <div className="flex justify-between items-center gap-x-4">
                 {user ? (
                     <div className="flex gap-x-4 items-center">
                         <Button
@@ -151,11 +129,7 @@ const Header: React.FC<HeaderProps> = ({
                         <div>
                             <Button
                                 onClick={authModal.onOpen}
-                                className="
-                                    bg-transparent
-                                    text-neutral-300
-                                    font-medium
-                                "
+                                className="bg-transparent text-neutral-300 font-medium"
                             >
                                 Sign Up
                             </Button>
@@ -163,9 +137,7 @@ const Header: React.FC<HeaderProps> = ({
                         <div>
                             <Button
                                 onClick={authModal.onOpen}
-                                className="
-                                    bg-white px-6 py-2
-                                "
+                                className="bg-white px-6 py-2"
                             >
                                 Log in
                             </Button>
